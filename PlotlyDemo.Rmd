@@ -1,0 +1,175 @@
+---
+title: "Week 3 Assignment"
+author: "FrockyG"
+date: "2025-03-12"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE,warning=FALSE,message=FALSE)
+```
+
+
+
+
+##   2025 US tech stock performance 
+
+
+```{r ,echo=FALSE,message=FALSE}
+library(tidyquant)
+library(plotly)
+tickers = c("TSLA","GOOG",  "AMZN", "META", "NFLX", "MSFT")
+for (i in tickers){
+  getSymbols(i,
+             from = "2024-12-12",
+             to = "2025-03-12")}
+
+x <- list(
+  title = "date"
+)
+y <- list(
+  title = "value"
+)
+
+stock <- data.frame(
+                    TSLA$TSLA.Adjusted,
+                    GOOG$GOOG.Adjusted,
+                    AMZN$AMZN.Adjusted,
+                    META$META.Adjusted,
+                    NFLX$NFLX.Adjusted,
+                    MSFT$MSFT.Adjusted)
+stock$TSLA.Adjusted <- stock$TSLA.Adjusted/stock$TSLA.Adjusted[1]
+stock$GOOG.Adjusted <- stock$GOOG.Adjusted/stock$GOOG.Adjusted[1]
+stock$AMZN.Adjusted <- stock$AMZN.Adjusted/stock$AMZN.Adjusted[1]
+stock$META.Adjusted <- stock$META.Adjusted/stock$META.Adjusted[1]
+stock$NFLX.Adjusted <- stock$NFLX.Adjusted/stock$NFLX.Adjusted[1]
+stock$MSFT.Adjusted <- stock$MSFT.Adjusted/stock$MSFT.Adjusted[1]
+stock <- data.frame(stock,rownames(stock))
+colnames(stock) <- append(tickers,'Dates')
+
+ax <- list(
+  title = "",
+  zeroline = FALSE,
+  showline = FALSE,
+  showticklabels = FALSE
+)
+
+
+fig1 <- plot_ly(stock, type = 'scatter', mode = 'lines', fill = 'tonexty')%>%
+  add_trace(x = ~Dates, y = ~TSLA, name = 'TSLA')%>%
+  layout(legend=list(title=list(text='company')), xaxis = ax, yaxis = list(range = c(0.2,1.5), title = 'value'))
+
+
+fig2 <- plot_ly(stock, type = 'scatter', mode = 'lines', fill = 'tonexty')%>%
+  add_trace(x = ~Dates, y = ~GOOG, name = 'GOOG')%>%
+  layout(legend=list(title=list(text='company')), xaxis = ax, yaxis = list(range = c(0.2,1.5),title = '', showticklabels = FALSE))
+
+fig3 <- plot_ly(stock, type = 'scatter', mode = 'lines', fill = 'tonexty')%>%
+  add_trace(x = ~Dates, y = ~AMZN, name = 'AMZN')%>%
+  layout(legend=list(title=list(text='company')), xaxis = ax, yaxis = list(range = c(0.2,1.5), title = 'value'))
+
+fig4 <- plot_ly(stock, type = 'scatter', mode = 'lines', fill = 'tonexty')%>%
+  add_trace(x = ~Dates, y = ~META, name = 'META')%>%
+  layout(legend=list(title=list(text='company')), xaxis = ax, yaxis = list(range = c(0.2,1.5),title = '', showticklabels = FALSE))
+
+
+
+fig5 <- plot_ly(stock, type = 'scatter', mode = 'lines', fill = 'tonexty')%>%
+  add_trace(x = ~Dates, y = ~NFLX, name = 'NFLX')%>%
+  layout(legend=list(title=list(text='company')), xaxis = list(title = 'Date'), yaxis = list(range = c(0.2,1.5), title = 'value'))
+
+
+    
+fig6 <- plot_ly(stock, type = 'scatter', mode = 'lines', fill = 'tonexty')%>%
+  add_trace(x = ~Dates, y = ~MSFT, name = 'MSFT')%>%
+  layout( legend=list(title=list(text='company')), yaxis = list(range = c(0.2,1.5) ,showticklabels = FALSE, title =''),  xaxis = list(title = 'Date'))
+
+
+
+fig <- subplot(fig1, fig2, fig3, fig4, fig5, fig6,
+               nrows = 3, titleY = TRUE, titleX = TRUE) %>% layout(
+                 xaxis = list(zerolinecolor = '#ffff',
+                              zerolinewidth = 2,
+                              gridcolor = 'ffff'),
+                 yaxis = list(zerolinecolor = '#ffff',
+                              zerolinewidth = 2,
+                              gridcolor = 'ffff'),
+                 plot_bgcolor='#e5ecf6')
+annotations = list(
+  list(
+    x = 0.225,
+    y = 1.0,
+    font = list(size = 10),
+    text = "company=TSLA",
+    xref = "paper",
+    yref = "paper",
+    xanchor = "center",
+    yanchor = "bottom",
+    showarrow = FALSE
+  ),
+  list(
+    x = 0.575,
+    y = 1,
+    font = list(size = 10),
+    text = "company=GOOG",
+    xref = "paper",
+    yref = "paper",
+    xanchor = "center",
+    yanchor = "bottom",
+    showarrow = FALSE
+  ),
+  list(
+    x = 0.225,
+    y = 0.64,
+    font = list(size = 10),
+    text = "company=AMZN",
+    xref = "paper",
+    yref = "paper",
+    xanchor = "center",
+    yanchor = "bottom",
+    showarrow = FALSE
+  ),
+  list(
+    x = 0.575,
+    y = 0.64,
+    font = list(size = 10),
+    text = "company=META",
+    xref = "paper",
+    yref = "paper",
+    xanchor = "center",
+    yanchor = "bottom",
+    showarrow = FALSE
+  ),
+  list(
+    x = 0.225,
+    y = 0.315,
+    font = list(size = 10),
+    text = "company=NFLX",
+    xref = "paper",
+    yref = "paper",
+    xanchor = "center",
+    yanchor = "bottom",
+    showarrow = FALSE
+  ),
+  list(
+    x = 0.575,
+    y = 0.315,
+    font = list(size = 10),
+    text = "company=MSFT",
+    xref = "paper",
+    yref = "paper",
+    xanchor = "center",
+    yanchor = "bottom",
+    showarrow = FALSE
+  )
+)
+
+fig <- fig %>%layout(annotations = annotations, width = 750)
+options(warn = -1)
+fig
+
+
+
+```
+
